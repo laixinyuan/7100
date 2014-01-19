@@ -51,6 +51,7 @@ end
 
 toc
 
-finalScore = postProcess(score);
+finalScore = score.* (score>activeThreshold);
+finalScore = finalScore > 0;
 
 %rmpath('NO')

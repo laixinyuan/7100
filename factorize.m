@@ -14,6 +14,7 @@ while dbeta(beta, v, W*h)>threshold && count<maxCount
     count = count +1;
 end
 
+%whether this is legitimate
 activeNotes = h/max(h);
 
 end

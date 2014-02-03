@@ -14,9 +14,20 @@ for n = 1:length(midiScore)
     actualScoreInFrames( nthKey, startFrame:endFrame) = ones(1, endFrame-startFrame+1);
 end
 
-hit  = sum(sum( finalScore.*actualScoreInFrames )) /(len*88);
-miss = sum(sum( finalScore-actualScoreInFrames == -1)) /(len*88);
-fa   = sum(sum( finalScore-actualScoreInFrames ==  1)) /(len*88);
+save actualScoreInFrames actualScoreInFrames
+
+hit  = sum(sum( finalScore.*actualScoreInFrames )) / sum(sum(actualScoreInFrames));
+miss = sum(sum( finalScore-actualScoreInFrames == -1)) / sum(sum(actualScoreInFrames));
+fa   = sum(sum( finalScore-actualScoreInFrames ==  1)) / sum(sum(actualScoreInFrames));
+
+load score
+subplot(2,1,1)
+imagesc(actualScoreInFrames)
+set(gca, 'YDir', 'normal')
+subplot(2,1,2)
+imagesc(finalScore)
+set(gca, 'YDir', 'normal')
+
 end
 
 

@@ -1,20 +1,30 @@
 addpath('NO')
 
+clear
+
 fftSize        = 2^10; 
-downSampleRate = 4; 
-win            = hamming(fftSize);
+secondsPerFrame = 0.1;
+downsampleRate = 3; 
+grain = zeros(fftSize, 1);
+nValidSamples  = round(44100*secondsPerFrame/downsampleRate);%hard coding here
+win            = hamming(nValidSamples); 
 W              = zeros(fftSize/2, 88);
 
 for n = 1:88
     if exist(['MAPS_ISOL_NO_M_S0_M' num2str(n+20) '_AkPnBcht.wav'], 'file')
-        in=wavread(['MAPS_ISOL_NO_M_S0_M' num2str(n+20) '_AkPnBcht.wav']);
+        [in,fs]=wavread(['MAPS_ISOL_NO_M_S0_M' num2str(n+20) '_AkPnBcht.wav']);
     else
-        in=wavread(['MAPS_ISOL_NO_M_S1_M' num2str(n+20) '_AkPnBcht.wav']);
+        [in,fs]=wavread(['MAPS_ISOL_NO_M_S1_M' num2str(n+20) '_AkPnBcht.wav']);
     end
     
+    % stereo to mono, low pass, downsample
     in = mean(in, 2);
-    nonZeroIndex = 44100;   %find(in, 1, 'first');
-    grain = win.*in(nonZeroIndex:downSampleRate:nonZeroIndex+downSampleRate*(fftSize-1));
+    in = antiAlias(in, downsampleRate);
+    in = in(1:downsampleRate:end);
+    
+    startPoint = round(fs/downsampleRate);   %start from 1"
+       
+    grain(1:nValidSamples) = win.*in(startPoint:startPoint+nValidSamples-1);
     spectrum = abs(fft(grain));
     W(:,n)   = spectrum(1:fftSize/2)/max(spectrum); 
 end

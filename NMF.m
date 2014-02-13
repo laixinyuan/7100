@@ -7,15 +7,15 @@ beta            = 0.5;
 downsampleRate  = 3;
 fftSize         = 2^10;
 
-secondsPerFrame = 0.1;
+secondsPerFrame = 0.05;
 samplesPerFrame = round (secondsPerFrame * 44100 / downsampleRate);
 
 hopSizeInSecs   = 0.025;
 hopSize         = floor (hopSizeInSecs * 44100 / downsampleRate);
 
-load MAPS_MUS-chpn-p4_AkPnBcht.txt
-midiScore = MAPS_MUS_chpn_p4_AkPnBcht;
-[in, fs] = wavread( 'MAPS_MUS-chpn-p4_AkPnBcht.wav' );
+load MAPS_MUS-chpn_op25_e2_AkPnBcht.txt
+midiScore = MAPS_MUS_chpn_op25_e2_AkPnBcht;
+[in, fs] = wavread( 'MAPS_MUS-chpn_op25_e2_AkPnBcht.wav' );
 in = mean(in, 2);
 in = antiAlias(in, downsampleRate);
 in = in(1:downsampleRate:end);

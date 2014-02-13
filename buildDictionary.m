@@ -3,7 +3,7 @@ addpath('NO')
 clear
 
 fftSize        = 2^10; 
-secondsPerFrame = 0.1;
+secondsPerFrame = 0.05;
 downsampleRate = 3; 
 grain = zeros(fftSize, 1);
 nValidSamples  = round(44100*secondsPerFrame/downsampleRate);%hard coding here
@@ -22,7 +22,7 @@ for n = 1:88
     in = antiAlias(in, downsampleRate);
     in = in(1:downsampleRate:end);
     
-    startPoint = round(fs/downsampleRate);   %start from 1"
+    startPoint = round(fs/downsampleRate);   %start from 1s
        
     grain(1:nValidSamples) = win.*in(startPoint:startPoint+nValidSamples-1);
     spectrum = abs(fft(grain));
@@ -30,5 +30,11 @@ for n = 1:88
 end
 
 save dictionary W
+
+WW = zeros(512*88,1);
+for col = 1:88
+    WW((col-1)*512+1:col*512,1) = W(:,col);
+end
+dlmwrite('dictionary.txt', WW)
 
 rmpath('NO')
